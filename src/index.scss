@@ -1,0 +1,14 @@
+@import "~bootstrap/scss/bootstrap";
+
+
+@font-face {
+    font-family: 'Archivo Narrow', sans-serif;
+    src:  url('./fonts/ArchivoNarrow-Regular.ttf') format('woff2'),
+    url('./fonts/ArchivoNarrow-Regular.ttf') format('woff');
+    font-weight: 600;
+    font-style: normal;
+}
+
+body{
+    font-family: 'Archivo Narrow', sans-serif;
+}
