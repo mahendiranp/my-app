@@ -1,0 +1,15 @@
+.card{
+    .card-body {
+        font-size: 14px;
+        .text-lne-through{
+            color: "red";
+            text-decoration: line-through;
+        }
+        .color-black{
+            color: #000;
+        }
+        h5{
+            margin-bottom: 0;
+        }
+    }
+}

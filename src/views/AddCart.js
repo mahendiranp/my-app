@@ -8,6 +8,8 @@ import Product from "./../component/Product";
 import { getData } from "./../action/GetCart";
 import { setSelectedProduct } from "./../action/SelectedProduct";
 
+import './../style/AddCart.scss'
+
 class AddCart extends React.Component {
   constructor(props) {
     super(props);
@@ -78,13 +80,10 @@ class AddCart extends React.Component {
                       </div>
                       <div className="card-body bg-light p-2 ">
                       <h5 className="card-title">{item.name}</h5>
-                      <div className="d-flex w-100">
+                      <div className="d-flex w-100 align-items-center">
                         {item.discount ? (
-                          <div
-                            class="pr-2 bd-highlight"
-                            style={{ color: "red", textDecoration: "line-through" }}
-                          >
-                            <span style={{ color: "#000" }}>${item.price}</span>
+                          <div class="pr-2 bd-highlight  text-lne-through">
+                            <span className='color-black'>${item.price}</span>
                           </div>
                         ) : (
                           <div class="pr-2 bd-highlight font-weight-bold">${item.price}</div>
