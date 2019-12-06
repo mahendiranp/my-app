@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Link, Route } from "react-router-dom";
 
 import SpinnerButton from "./../component/SpinnerButton";
 
-import '../style/Summary.scss'
+import './../style/Summary.scss'
 
 
 
@@ -85,11 +85,11 @@ class OrderSummary extends React.Component {
 
 
   return (
-    <div className="App">
+    <div className="summary">
       <div className="container">
         <div className="row pt-3">
           <div className="col-12">
-            <Link to="/">Order</Link>
+            <Link to="/">Order page</Link>
           </div>
         </div>
 
