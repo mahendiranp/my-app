@@ -1,12 +1,9 @@
+## yarn
 
-## Getting Started
+## yarn start
 
-Clone this repo and install dependencies with `npm install`.
+## yarn build
 
-### Starting The Dev Server
+## yarn predeploy
 
-To start the server and start hacking, run
-
-```BASH
-npm start
-```
+## yarn deploy
