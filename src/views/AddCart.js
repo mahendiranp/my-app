@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Link, Route } from "react-router-dom";
 
 import ImagePlaceholder from "./../component/ImagePlaceholder";
 import Product from "./../component/Product";
+import discountCalculate from "./../component/discountCalculate";
 
 import { getData } from "./../action/GetCart";
 import { setSelectedProduct } from "./../action/SelectedProduct";
@@ -20,7 +21,9 @@ class AddCart extends React.Component {
     this.onChangeValue = this.onChangeValue.bind(this);
   }
   componentDidMount() {
+    if(!this.props.product){
     this.props.dispatch(getData());
+    }
   }
   onChangeValue(val) {
     let selectedId = this.state.selectedItem
@@ -41,6 +44,8 @@ class AddCart extends React.Component {
       filteredProductList.push(selectedItem)
     });
     console.log(filteredProductList)
+    console.log('hello')
+    console.log(this.props.selectedProductList)
     this.props.dispatch(setSelectedProduct(filteredProductList))
     this.setState({
       selectedItem: unique,
@@ -54,22 +59,22 @@ class AddCart extends React.Component {
 
     return (
       <div className="App">
-        <div class="container pt-3">
-          <div class="row">
-            <div class="col-4">All items</div>
-            <div class="col-4">
-              {this.state.selectedProduct.length ? <div class="alert alert-success" role="alert">
+        <div className="container pt-3">
+          <div className="row">
+            <div className="col-4">All items</div>
+            <div className="col-4">
+              {this.state.selectedProduct.length ? <div className="alert alert-success" role="alert">
                 {this.state.selectedProduct.map((item) => (<span>{item.name}, </span>))} is added cart.
               </div> : ''}
             </div>
-            <div class="col-4 float-right">
-            <Link to="/summary" class="btn btn-primary  float-right">
+            <div className="col-4 float-right">
+            <Link to="/summary" className="btn btn-primary  float-right">
               Go to Cart
             </Link>
           </div>
           </div>
         </div>
-        <div class="container">
+        <div className="container">
           <div className="row">
             {this.props.product
               ? this.props.product.map(item => (
@@ -82,21 +87,21 @@ class AddCart extends React.Component {
                       <h5 className="card-title">{item.name}</h5>
                       <div className="d-flex w-100 align-items-center">
                         {item.discount ? (
-                          <div class="pr-2 bd-highlight  text-lne-through">
+                          <div className="pr-2 bd-highlight  text-lne-through">
                             <span className='color-black'>${item.price}</span>
                           </div>
                         ) : (
-                          <div class="pr-2 bd-highlight font-weight-bold">${item.price}</div>
+                          <div className="pr-2 bd-highlight font-weight-bold">${item.price}</div>
                         )}
                         {item.discount ? (
-                          <div class=" bd-highlight font-weight-bold">${item.price - item.discount}</div>
+                          <div className=" bd-highlight font-weight-bold">${discountCalculate(item.price, item.discount)}</div>
                         ) : (
                           ""
                         )}
-                        <div class="ml-auto p-2 bd-highlight">
+                        <div className="ml-auto bd-highlight">
                           <button
                             type="button"
-                            class="btn btn-outline-primary"
+                            className="btn btn-outline-primary"
                             onClick={this.onChangeValue.bind(this, item.id)}
                           >
                             Add to cart
@@ -106,10 +111,7 @@ class AddCart extends React.Component {
                     </div>
                     </div>
                     {item.discount ? (
-                      <div
-                        className="position-absolute alert alert-success px-2 py-1"
-                        style={{ left: "16px", top: "15px" }}
-                      >
+                      <div className="position-absolute discout-info px-2 py-1">
                         {item.discount} % Off
                       </div>
                     ) : (
@@ -127,7 +129,8 @@ class AddCart extends React.Component {
 
 const mapStateToProps = function(state) {
   return {
-    product: state.productlistData.data
+    product: state.productlistData.data,
+    selectedProductList: state.selectedProduct.productList
   };
 };
 

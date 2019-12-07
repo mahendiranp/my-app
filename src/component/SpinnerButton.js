@@ -14,14 +14,14 @@ class SpinnerButton extends React.Component {
     this.setState({
       value: this.state.value + 1
     });
-    props.onChange(this.state.value - 1)
+    this.props.onChange(this.state.value + 1)
   }
 
   handleDecrement() {
     this.setState({
       value: this.state.value - 1
     });
-    props.onChange(this.state.value - 1)
+    this.props.onChange(this.state.value - 1)
   }
 
   handleValue(e) {
@@ -29,7 +29,7 @@ class SpinnerButton extends React.Component {
     this.setState({
       value: e.target.value
     });
-    props.onChange(event.target.value)
+    this.props.onChange(event.target.value)
   }
   render() {
     return (
@@ -53,7 +53,7 @@ class SpinnerButton extends React.Component {
           />
         </div>
         <div className="">
-          {this.state.value <= 0 ? (
+          {this.state.value <= 1 ? (
             <button className="btn btn-link p-0" type="button" disabled>
               -
             </button>

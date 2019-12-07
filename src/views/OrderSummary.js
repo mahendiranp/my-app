@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import { BrowserRouter as Router, Link, Route } from "react-router-dom";
 
 import SpinnerButton from "./../component/SpinnerButton";
+import ProductList from "./../component/ProductList";
+import discountCalculate from "./../component/discountCalculate";
 
 import './../style/Summary.scss'
 
@@ -59,9 +61,6 @@ class OrderSummary extends React.Component {
   }
 
   render(){
-  const onChangeUsername = (value) => {
-    console.log(value)
-  }
 
   console.log(this.state.selectedProductList)
 
@@ -107,27 +106,28 @@ class OrderSummary extends React.Component {
                   </thead>
                   <tbody>
                   {this.state.selectedProductList ? this.state.selectedProductList.map((item) => (
-                    <tr>
-                      <td data-th="Product">
-                        <div class="row border d-flex align-items-center p-2" >
-                          <div class="col-2">
-                            <img />
-                          </div>
-                          <div class="col-8">
-                            <p className='m-0'>{item.name}</p>
-                          </div>
-                          <div class="col-2">
-                           <button className="btn btn-link" onClick={this.handleRemoveItem.bind(this, item.id)} >x</button>
-                          </div>
-                        </div>
-                      </td>
-                      <td data-th="Price">
-                        <SpinnerButton onChange = {onChangeUsername} />
-                      </td>
-                      <td data-th="Subtotal" class="text-center">
-                        {item.price}
-                      </td>
-                    </tr>
+                    <ProductList removeItem={this.handleRemoveItem} key={item.id} data={item} />
+                    // <tr>
+                    //   <td data-th="Product">
+                    //     <div class="row border d-flex align-items-center p-2" >
+                    //       <div class="col-2">
+                    //         <img />
+                    //       </div>
+                    //       <div class="col-8">
+                    //         <p className='m-0'>{item.name}</p>
+                    //       </div>
+                    //       <div class="col-2">
+                    //        <button className="btn btn-link" onClick={this.handleRemoveItem.bind(this, item.id)} >x</button>
+                    //       </div>
+                    //     </div>
+                    //   </td>
+                    //   <td data-th="Price">
+                    //     <SpinnerButton onChange = {onChangeUsername} />
+                    //   </td>
+                    //   <td data-th="Subtotal" class="text-center">
+                    //     {item.price}
+                    //   </td>
+                    // </tr>
                   )): ''}
                     
                   </tbody>
@@ -141,7 +141,7 @@ class OrderSummary extends React.Component {
               <div className="w-100 p-2 d-flex"><div className='flex-fill'>Items ({this.state.selectedProductList ? this.state.selectedProductList.length : 0})</div><div className='flex-fill'>:</div>  <div className='flex-fill text-right'>${calculatedPrice || ''}</div></div>
               <div className="w-100 p-2 d-flex"><div className='flex-fill'>Discount</div><div className='flex-fill'> : </div> <div className='flex-fill text-right'>{calculateDiscount || 0}</div></div>
               <div className="w-100 p-2 d-flex"><div className='flex-fill'>Type Discount</div> <div className='flex-fill'>:</div> <div className='flex-fill text-right'>100</div></div>
-              <div className="w-100 p-2 bg-light d-flex"><div className='flex-fill'>Total</div> <div className='flex-fill'>:</div> <div className='flex-fill text-right'>${calculatedPrice ? calculatedPrice - calculateDiscount : 0}</div></div>
+              <div className="w-100 p-2 bg-light d-flex"><div className='flex-fill'>Total</div> <div className='flex-fill'>:</div> <div className='flex-fill text-right'>${calculatedPrice ? discountCalculate(calculatedPrice, calculateDiscount)  : 0}</div></div>
             </div>
           </div>
         </div>
