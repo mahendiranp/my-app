@@ -111,7 +111,7 @@ class OrderSummary extends React.Component {
                   <tbody>
                   {this.state.selectedProductList ? this.state.selectedProductList.map((item) => (
                     <ProductList removeItem={this.handleRemoveItem} key={item.id} data={item} />
-                  )): 'No Items selected'}
+                  )): ''}
                     
                   </tbody>
                 </table>
