@@ -1,8 +1,10 @@
+@import './variable.scss';
+
 .card{
     .card-body {
         font-size: 14px;
         .text-lne-through{
-            color: "red";
+            color: red;
             text-decoration: line-through;
         }
         .color-black{
@@ -12,4 +14,12 @@
             margin-bottom: 0;
         }
     }
+}
+
+.discout-info{
+    color: #fff;
+    background-color:$color-green;
+    border-radius:$border-radius;
+    left: 16px;
+    top: 15px 
 }
