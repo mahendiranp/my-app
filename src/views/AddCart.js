@@ -31,17 +31,10 @@ class AddCart extends React.Component {
     }
   }
   onChangeValue(val) {
-    console.log(val)
     let productList = this.props.product
-    console.log(this.props.selectedProductList)
     let selectedProducts = []
-    let filterProduct = productList.find(x => x.id == val);
-    console.log(filterProduct)
-    
+    let filterProduct = productList.find(x => x.id == val);    
     let isPresent = this.state.selectedProduct.some(function(el){ return el.id === val});
-
-    console.log(isPresent)
-
     if(isPresent) {
 
       let findIndex = this.state.selectedProduct.findIndex((data) =>  data.id ===  val)
@@ -51,13 +44,10 @@ class AddCart extends React.Component {
       let data = propertyData.findIndex((data) => { 
         if(data.id ===  val) {
           let total = discountCalculate(data.price, data.discount)
-          console.log(total)
           data['totalItems'] = data.totalItems ?  data.totalItems + 1 : 1
           data['totalCost'] = data.totalItems ? data.totalItems * total : total
         }
       
-      console.log(data)
-
       this.setState({
         selectedProduct: propertyData
       })
@@ -116,11 +106,6 @@ class AddCart extends React.Component {
     // })
   }
   render() {
-
-    console.log(this.state.selectedProduct)
-
-    console.log(this.props)
-
 
     return (
       <div className="App">

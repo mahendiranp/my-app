@@ -29,8 +29,6 @@ class OrderSummary extends React.Component {
   }
   componentDidMount(){
     
-    console.log(this.props)
-
     let calculateProduct = this.props && this.props.selectedProductList ? this.props.selectedProductList : []  
     
     const calculatedPrice = calculateProduct
@@ -71,8 +69,6 @@ class OrderSummary extends React.Component {
   }
 
   render(){
-
-    console.log(this.props)
   let calculateProduct =  this.state.selectedProductList ? this.state.selectedProductList : []  
   
   const calculatedPrice = calculateProduct
@@ -93,10 +89,10 @@ class OrderSummary extends React.Component {
         </div>
 
         {this.state.selectedProductList ? <div className="row">
-          <div class="col-8">
+          <div className="col-8">
             <div className="row">
             <div className="col-12">
-                <table id="cart" class="table table-hover table-condensed border-bottom">
+                <table id="cart" className="table table-hover table-condensed border-bottom">
                   <thead>
                     <tr>
                       <th style={{width: '70%'}}>Item</th>
@@ -114,12 +110,12 @@ class OrderSummary extends React.Component {
               </div>
             </div>
           </div>
-          <div class="col-4">
+          <div className="col-4">
             <div className="d-flex flex-column border priceDetails">
               <div className="w-100 p-2">Total</div>
               <div className="w-100 p-2 d-flex"><div className='flex-fill'>Items ({this.state.selectedProductList ? this.state.selectedProductList.length : 0})</div><div className='flex-fill'>:</div>  <div className='flex-fill text-right'>${calculatedPrice || ''}</div></div>
-              <div className="w-100 p-2 d-flex"><div className='flex-fill'>Discount</div><div className='flex-fill'> : </div> <div className='flex-fill text-right'>{calculateDiscount || 0}</div></div>
-              <div className="w-100 p-2 d-flex"><div className='flex-fill'>Type Discount</div> <div className='flex-fill'>:</div> <div className='flex-fill text-right'>100</div></div>
+              <div className="w-100 p-2 d-flex"><div className='flex-fill'>Discount</div><div className='flex-fill'> : </div> <div className='flex-fill text-right'>-${calculateDiscount || 0}</div></div>
+              <div className="w-100 p-2 d-flex"><div className='flex-fill'>Type Discount</div> <div className='flex-fill'>:</div> <div className='flex-fill text-right'>0</div></div>
               <div className="w-100 p-2 bg-light d-flex"><div className='flex-fill'>Total</div> <div className='flex-fill'>:</div> <div className='flex-fill text-right'>${calculatedPrice ? discountCalculate(calculatedPrice, calculateDiscount)  : 0}</div></div>
             </div>
           </div>

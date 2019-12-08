@@ -20,7 +20,6 @@ class ProductList extends React.Component {
     })
   }
   handleSpinnerButton(value){
-      console.log(value)
       this.setState({
         calculateTotal: this.state.price * value
       })
@@ -34,8 +33,7 @@ class ProductList extends React.Component {
     this.props.removeItem(value)
   }
   render() {
-      console.log(this.state.calculateTotal)
-      console.log(this.props)
+
     return (
       <tr>
         <td data-th="Product">
