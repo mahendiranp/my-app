@@ -4,4 +4,14 @@
             vertical-align: middle;
         }
     }
+
+    .products{
+        .image{
+            width: 40px;
+            height: 40px;
+            img{
+                width: 100%;
+            }
+        }
+    }
 }

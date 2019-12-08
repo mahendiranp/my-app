@@ -2,16 +2,17 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { BrowserRouter as Router, Link, Route } from "react-router-dom";
 
-import SpinnerButton from "./../component/SpinnerButton";
 import ProductList from "./../component/ProductList";
 import discountCalculate from "./../component/discountCalculate";
 
 import { setSelectedProduct } from "./../action/SelectedProduct";
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronLeft} from '@fortawesome/free-solid-svg-icons'
+
+import PlaceHolder from './../assets/150.png';
 
 import './../style/Summary.scss'
-
-
 
 class OrderSummary extends React.Component {
 
@@ -24,27 +25,20 @@ class OrderSummary extends React.Component {
       selectedProductList : []
     }
     this.handleRemoveItem = this.handleRemoveItem.bind(this)
+    this.handleOnProductChange = this.handleOnProductChange.bind(this)
   }
   componentDidMount(){
+    
     console.log(this.props)
 
-    let calculateProduct = this.props && this.props.selectedProductList ? this.props.selectedProductList : []
-
-
-  
-  console.log(calculateProduct)
-  
-  
-  const calculatedPrice = calculateProduct
-    .map(item => item.price)
+    let calculateProduct = this.props && this.props.selectedProductList ? this.props.selectedProductList : []  
+    
+    const calculatedPrice = calculateProduct
+    .map(item => item.totalCost)
     .reduce((prev, curr) => prev + curr, 0);
-  
-  const calculateDiscount =   calculateProduct.map(item => item.discount)
-  .reduce((prev, curr) => prev + curr, 0);
-  
-  
-    console.log(calculatedPrice)
-
+    
+    const calculateDiscount =   calculateProduct.map(item => item.discount).reduce((prev, curr) => prev + curr, 0);
+    
     this.setState({
       selectedProductList: this.props.selectedProductList,
       calculateProduct: calculateProduct,
@@ -54,45 +48,47 @@ class OrderSummary extends React.Component {
   }
 
   handleRemoveItem(id){
-    console.log(id)
     let listItem = this.state.selectedProductList
     let filteredProduct = listItem.filter(product => product.id !== id);
-    console.log(filteredProduct)
     this.props.dispatch(setSelectedProduct(filteredProduct))
     this.setState({
       selectedProductList: filteredProduct
     })
   }
 
+  handleOnProductChange(value){
+
+    let selectedData = this.state.selectedProductList
+
+    let findProduct = this.state.selectedProductList.findIndex((info) => info.id === value.id)
+
+    selectedData[findProduct] = value
+
+    this.setState({
+      selectedProductList : selectedData
+    })
+
+  }
+
   render(){
 
-  console.log(this.state.selectedProductList)
-
-  let calculateProduct =  this.state.selectedProductList ? this.state.selectedProductList : []
-
-
-  
-  console.log(calculateProduct)
-  
+    console.log(this.props)
+  let calculateProduct =  this.state.selectedProductList ? this.state.selectedProductList : []  
   
   const calculatedPrice = calculateProduct
-    .map(item => item.price)
+    .map(item => item.totalCost)
     .reduce((prev, curr) => prev + curr, 0);
   
   const calculateDiscount =   calculateProduct.map(item => item.discount)
   .reduce((prev, curr) => prev + curr, 0);
-  
-  
-    console.log(calculatedPrice)
-
-
 
   return (
+    
     <div className="summary">
       <div className="container">
-        <div className="row pt-3">
+        <div className="row pt-3 mb-3">
           <div className="col-12">
-            <Link to="/">Order page</Link>
+            <Link to="/"><FontAwesomeIcon icon={faChevronLeft} /></Link>  Order page
           </div>
         </div>
 
@@ -103,14 +99,14 @@ class OrderSummary extends React.Component {
                 <table id="cart" class="table table-hover table-condensed border-bottom">
                   <thead>
                     <tr>
-                      <th>Item</th>
+                      <th style={{width: '70%'}}>Item</th>
                       <th>Qty</th>
                       <th>Price</th>
                     </tr>
                   </thead>
                   <tbody>
                   {this.state.selectedProductList ? this.state.selectedProductList.map((item) => (
-                    <ProductList removeItem={this.handleRemoveItem} key={item.id} data={item} />
+                    <ProductList placeHoder={PlaceHolder} onDataChange={this.handleOnProductChange} removeItem={this.handleRemoveItem} key={item.id} data={item} />
                   )): ''}
                     
                   </tbody>
@@ -130,8 +126,7 @@ class OrderSummary extends React.Component {
         </div> : 'Cart is empty' }
       </div>
     </div>
-  );
-                  }
+  );}
 }
 
 

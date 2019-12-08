@@ -9,6 +9,8 @@ import discountCalculate from "./../component/discountCalculate";
 import { getData } from "./../action/GetCart";
 import { setSelectedProduct } from "./../action/SelectedProduct";
 
+
+
 import './../style/AddCart.scss'
 
 class AddCart extends React.Component {
@@ -24,40 +26,94 @@ class AddCart extends React.Component {
     if(!this.props.product){
     this.props.dispatch(getData());
     }
+    if(this.props.selectedProductList){
+      this.setState({selectedProduct: this.props.selectedProductList})
+    }
   }
   onChangeValue(val) {
-    let selectedId = this.state.selectedItem
-    let sproductList = this.props.product
-    let selectedProduct = this.props.selectedProductList ? this.props.selectedProductList : null
-    console.log('dddddd')
+    console.log(val)
+    let productList = this.props.product
     console.log(this.props.selectedProductList)
-
-    let selectedCard = selectedProduct && selectedProduct.map((item) => {
-      selectedId.push(item.id)
-    })
+    let selectedProducts = []
+    let filterProduct = productList.find(x => x.id == val);
+    console.log(filterProduct)
     
-    if(!selectedId.indexOf(val)){
-      var index = selectedId.indexOf(val);
-      if (index !== -1) selectedId.splice(index, 1);
-      console.log(selectedId)
-    } else {
-      selectedId.push(val)
+    let isPresent = this.state.selectedProduct.some(function(el){ return el.id === val});
+
+    console.log(isPresent)
+
+    if(isPresent) {
+
+      let findIndex = this.state.selectedProduct.findIndex((data) =>  data.id ===  val)
+
+      let propertyData = this.state.selectedProduct
+
+      let data = propertyData.findIndex((data) => { 
+        if(data.id ===  val) {
+          let total = discountCalculate(data.price, data.discount)
+          console.log(total)
+          data['totalItems'] = data.totalItems ?  data.totalItems + 1 : 1
+          data['totalCost'] = data.totalItems ? data.totalItems * total : total
+        }
+      
+      console.log(data)
+
+      this.setState({
+        selectedProduct: propertyData
+      })
+      
+      })
+
+    } else  {
+      let total = discountCalculate(filterProduct.price, filterProduct.discount)
+
+      
+      filterProduct['totalItems'] = 1
+      filterProduct['totalCost'] =  parseInt(total)
+
+
+      this.setState({
+        selectedProduct: [...this.state.selectedProduct, filterProduct]
+      })
+
     }
-    console.log(selectedId)
-    let unique = [...new Set(selectedId)];
-    console.log(unique);
-    let filteredProductList = []
-    let filterValue = unique.map((item) => {
-      let selectedItem = sproductList.find((product) => product.id === item);
-      filteredProductList.push(selectedItem)
-    });
-    console.log(filteredProductList)
-    console.log('hello')
-    this.props.dispatch(setSelectedProduct(filteredProductList))
-    this.setState({
-      selectedItem: unique,
-      selectedProduct: filteredProductList
-    })
+    
+
+    // this.props.dispatch(setSelectedProduct(filterProduct))
+    // let selectedId = this.state.selectedItem
+    // let sproductList = this.props.product
+    // let selectedProduct = this.props.selectedProductList ? this.props.selectedProductList : null
+    // console.log('dddddd')
+    // console.log(this.props.selectedProductList)
+
+    // let selectedCard = selectedProduct && selectedProduct.map((item) => {
+    //   console.log('ssss')
+    //   console.log(item)
+    //   selectedId.push(item.id)
+    // })
+    
+    // if(!selectedId.indexOf(val)){
+    //   var index = selectedId.indexOf(val);
+    //   if (index !== -1) selectedId.splice(index, 1);
+    //   console.log(selectedId)
+    // } else {
+    //   selectedId.push(val)
+    // }
+    // console.log(selectedId)
+    // let unique = [...new Set(selectedId)];
+    // console.log(unique);
+    // let filteredProductList = []
+    // let filterValue = unique.map((item) => {
+    //   let selectedItem = sproductList.find((product) => product.id === item);
+    //   filteredProductList.push(selectedItem)
+    // });
+    // console.log(filteredProductList)
+    // console.log('hello')
+    // this.props.dispatch(setSelectedProduct(filteredProductList))
+    // this.setState({
+    //   selectedItem: unique,
+    //   selectedProduct: filteredProductList
+    // })
   }
   render() {
 
@@ -77,7 +133,7 @@ class AddCart extends React.Component {
               </div> : ''}
             </div>
             <div className="col-4 float-right">
-            <Link to="/summary" className="btn btn-primary  float-right">
+            <Link to="/summary" onClick={() => {this.props.dispatch(setSelectedProduct(this.state.selectedProduct))}} className="btn btn-primary  float-right">
               Go to Cart
             </Link>
           </div>

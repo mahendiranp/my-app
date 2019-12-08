@@ -1,8 +1,14 @@
 @import './variable.scss';
 
 .card{
+    .card-header{
+        min-height: 150px;
+    }
     .card-body {
-        font-size: 14px;
+        font-size: 12px;
+        h5 {
+            font-size: 1rem;
+        }
         .text-lne-through{
             color: red;
             text-decoration: line-through;

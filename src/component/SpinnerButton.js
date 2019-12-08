@@ -3,11 +3,17 @@ class SpinnerButton extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: 1
+      value: ''
     };
     this.handleIncrement = this.handleIncrement.bind(this);
     this.handleDecrement = this.handleDecrement.bind(this);
     this.handleValue = this.handleValue.bind(this);
+  }
+
+  componentDidMount(){
+    this.setState({
+      value: this.props.value
+    })
   }
 
   handleIncrement() {
