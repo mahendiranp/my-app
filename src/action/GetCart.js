@@ -19,7 +19,7 @@ function requestFailed(message){
 export function getData(){
     return dispatch => {
         dispatch(requestData());
-        axios.get('https://api.myjson.com/bins/qhnfp')
+        axios.get(' https://api.myjson.com/bins/qzuzi')
         .then(function (response) {
             console.log(response.data)
             dispatch(requestSuccess(response.data))

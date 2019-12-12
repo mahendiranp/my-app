@@ -6,6 +6,7 @@ function setRequestData(data){
 
 
 export function setSelectedProduct(data){
+    console.log(data)
     return dispatch => {
         dispatch(setRequestData(data));
       };

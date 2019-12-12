@@ -81,7 +81,7 @@ class OrderSummary extends React.Component {
   return (
     
     <div className="summary">
-      <div className="container">
+      <div className="container-fluid">
         <div className="row pt-3 mb-3">
           <div className="col-12">
             <Link to="/"><FontAwesomeIcon icon={faChevronLeft} /></Link>  Order page

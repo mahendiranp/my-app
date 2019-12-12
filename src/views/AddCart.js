@@ -2,9 +2,14 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { BrowserRouter as Router, Link, Route } from "react-router-dom";
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faRupeeSign} from '@fortawesome/free-solid-svg-icons'
+
 import ImagePlaceholder from "./../component/ImagePlaceholder";
 import Product from "./../component/Product";
 import discountCalculate from "./../component/discountCalculate";
+import Filter from "./../component/Filter";
+import Sorting from "./../component/Sorting";
 
 import { getData } from "./../action/GetCart";
 import { setSelectedProduct } from "./../action/SelectedProduct";
@@ -18,39 +23,69 @@ class AddCart extends React.Component {
     super(props);
     this.state = {
       selectedItem : [],
-      selectedProduct: []
+      selectedProduct: [],
+      products: []
     }
     this.onChangeValue = this.onChangeValue.bind(this);
+    this.hanldeFilter = this.hanldeFilter.bind(this)
+    this.handleSorting = this.handleSorting.bind(this)
   }
+
+  hanldeFilter(value) {
+    console.log(value)
+    let productList = this.props.product.filter((item) => item.price > value.min && item.price < value.max)
+    console.log(productList)
+    this.setState({products : productList})
+  }
+
+  handleSorting(value){
+    this.setState({products : value})
+  }
+
   componentDidMount() {
     if(!this.props.product){
     this.props.dispatch(getData());
     }
+
     if(this.props.selectedProductList){
+      this.setState({selectedProduct: this.props.selectedProductList})
+    }
+  }
+
+  componentDidUpdate(prevProps){
+    console.log('fgfdddddddd')
+    if(this.props.product !== prevProps.product){
+      console.log('dddddddddd')
+      this.setState({products : this.props.product})
+    }
+    if(this.props.selectedProductList !== prevProps.selectedProductList){
+      console.log('dddddddddddddddddddddd')
       this.setState({selectedProduct: this.props.selectedProductList})
     }
   }
   onChangeValue(val) {
     let productList = this.props.product
-    let selectedProducts = []
+    let selectedProducts = this.props.selectedProductList ?  this.props.selectedProductList : []
     let filterProduct = productList.find(x => x.id == val);    
     let isPresent = this.state.selectedProduct.some(function(el){ return el.id === val});
+    let selectedData = []
     if(isPresent) {
 
       let findIndex = this.state.selectedProduct.findIndex((data) =>  data.id ===  val)
 
-      let propertyData = this.state.selectedProduct
+      let propertyData = this.props.product
 
       let data = propertyData.findIndex((data) => { 
         if(data.id ===  val) {
           let total = discountCalculate(data.price, data.discount)
           data['totalItems'] = data.totalItems ?  data.totalItems + 1 : 1
           data['totalCost'] = data.totalItems ? data.totalItems * total : total
+          return data
         }
       
-      this.setState({
-        selectedProduct: propertyData
-      })
+        selectedProducts.push(data)
+
+        this.props.dispatch(setSelectedProduct(selectedProducts))
       
       })
 
@@ -61,73 +96,53 @@ class AddCart extends React.Component {
       filterProduct['totalItems'] = 1
       filterProduct['totalCost'] =  parseInt(total)
 
+      const propertyData =  filterProduct
 
-      this.setState({
-        selectedProduct: [...this.state.selectedProduct, filterProduct]
-      })
+      selectedProducts.push(propertyData)
+
+      this.props.dispatch(setSelectedProduct(selectedProducts))
+
 
     }
+
+    console.log(selectedProducts)
+
+    this.setState({
+      selectedProduct: selectedProducts
+    })
+
     
 
-    // this.props.dispatch(setSelectedProduct(filterProduct))
-    // let selectedId = this.state.selectedItem
-    // let sproductList = this.props.product
-    // let selectedProduct = this.props.selectedProductList ? this.props.selectedProductList : null
-    // console.log('dddddd')
-    // console.log(this.props.selectedProductList)
-
-    // let selectedCard = selectedProduct && selectedProduct.map((item) => {
-    //   console.log('ssss')
-    //   console.log(item)
-    //   selectedId.push(item.id)
-    // })
-    
-    // if(!selectedId.indexOf(val)){
-    //   var index = selectedId.indexOf(val);
-    //   if (index !== -1) selectedId.splice(index, 1);
-    //   console.log(selectedId)
-    // } else {
-    //   selectedId.push(val)
-    // }
-    // console.log(selectedId)
-    // let unique = [...new Set(selectedId)];
-    // console.log(unique);
-    // let filteredProductList = []
-    // let filterValue = unique.map((item) => {
-    //   let selectedItem = sproductList.find((product) => product.id === item);
-    //   filteredProductList.push(selectedItem)
-    // });
-    // console.log(filteredProductList)
-    // console.log('hello')
-    // this.props.dispatch(setSelectedProduct(filteredProductList))
-    // this.setState({
-    //   selectedItem: unique,
-    //   selectedProduct: filteredProductList
-    // })
   }
   render() {
 
+    var maxPriceObj = this.props.product ? Math.max(...this.props.product.map(e => e.price)): ''
+    var maxObj = this.props.product ?  this.props.product.find(item => item.price === maxPriceObj) : ''
+    let maxPrice = maxObj ? maxObj.price : null
+
+
+    var minPriceObj = this.props.product ? Math.min(...this.props.product.map(e => e.price)) : ''
+    var minObj = this.props.product ? this.props.product.find(item => item.price === minPriceObj): ''
+    let minPrice = minObj ? minObj.price : null
+
     return (
       <div className="App">
-        <div className="container pt-3">
-          <div className="row">
-            <div className="col-4">All items</div>
-            <div className="col-4">
-              {this.state.selectedProduct.length ? <div className="alert alert-success" role="alert">
-                {this.state.selectedProduct.map((item) => (<span>{item.name}, </span>))} is added cart.
-              </div> : ''}
-            </div>
-            <div className="col-4 float-right">
-            <Link to="/summary" onClick={() => {this.props.dispatch(setSelectedProduct(this.state.selectedProduct))}} className="btn btn-primary  float-right">
-              Go to Cart
-            </Link>
+
+        <div className="container-fluid">
+        <div className='row flex-xl-nowrap d-flex'>
+        <div className='col-md-3 col-xl-2 bd-sidebar'>
+        <Filter max={maxPrice} min={minPrice}  filterSubmit = {this.hanldeFilter} /></div>
+        <div className='col-md-9 col-xl-10 py-md-3 pl-md-5 bd-content'>
+          <div className='row'>
+          <div className='col-12'><Sorting data={this.state.products ? this.state.products : ''} onClick={this.handleSorting}/></div>
           </div>
-          </div>
-        </div>
-        <div className="container">
+          <Link to="/summary" onClick={() => {this.props.dispatch(setSelectedProduct(this.state.selectedProduct))}} className="btn btn-primary  float-right">
+          Go to Cart
+        </Link>
+
           <div className="row">
-            {this.props.product
-              ? this.props.product.map(item => (
+            {this.state.products
+              ? this.state.products.map(item => (
                   <div key={item.id} className="col-sm-6 col-md-6 col-xl-3 py-2 position-relative">
                     <div className="card">
                       <div className="card-header bg-white text-center">
@@ -135,41 +150,40 @@ class AddCart extends React.Component {
                       </div>
                       <div className="card-body bg-light p-2 ">
                       <h5 className="card-title">{item.name}</h5>
-                      <div className="d-flex w-100 align-items-center">
+                      <div className="d-flex w-100 align-items-cente py-3">
                         {item.discount ? (
-                          <div className="pr-2 bd-highlight  text-lne-through">
-                            <span className='color-black'>${item.price}</span>
+                          <div className='d-flex w-100'>
+                          <div className=" bd-highlight font-weight-bold"><FontAwesomeIcon icon={faRupeeSign} />{discountCalculate(item.price, item.discount)}</div>
+                          <div className="pr-2 bd-highlight text-lne-through ml-2">
+                            <span className='color-black'><FontAwesomeIcon icon={faRupeeSign} />{item.price}</span>
                           </div>
+                          <div className="ml-auto discout-info px-2">
+                          {item.discount} % Off
+                        </div>
+                          </div>
+  
                         ) : (
-                          <div className="pr-2 bd-highlight font-weight-bold">${item.price}</div>
+                          <div className="pr-2 bd-highlight font-weight-bold"><FontAwesomeIcon icon={faRupeeSign} />{item.price}</div>
                         )}
-                        {item.discount ? (
-                          <div className=" bd-highlight font-weight-bold">${discountCalculate(item.price, item.discount)}</div>
-                        ) : (
-                          ""
-                        )}
-                        <div className="ml-auto bd-highlight">
+                        
+                        </div>
+                        <div className='d-flex justify-content-center'>
+                        
                           <button
                             type="button"
-                            className="btn btn-outline-primary"
+                            className="btn btn-warning rounded-pill"
                             onClick={this.onChangeValue.bind(this, item.id)}
                           >
                             Add to cart
                           </button>
-                        </div>
                       </div>
                     </div>
                     </div>
-                    {item.discount ? (
-                      <div className="position-absolute discout-info px-2 py-1">
-                        {item.discount} % Off
-                      </div>
-                    ) : (
-                      ""
-                    )}
                   </div>
                 ))
               : "No data found"}
+          </div>
+          </div>
           </div>
         </div>
       </div>
